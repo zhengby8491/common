@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd ">
+	<context:component-scan base-package="com.huayin.common.cis" />
+	<context:component-scan base-package="com.huayin.common.persist" />
+	<!-- JDBC transaction manager -->
+	<bean id="JdbcTransactionManager" lazy-init="true"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="partitionDataSource" />
+		<property name="rollbackOnCommitFailure" value="true" />
+		<property name="failEarlyOnGlobalRollbackOnly" value="true" />
+		<property name="validateExistingTransaction" value="true" />
+	</bean>
+	<tx:annotation-driven transaction-manager="JdbcTransactionManager" />
+	<bean id="masterJdbcTemplate" lazy-init="true"
+		class="org.springframework.jdbc.core.JdbcTemplate" scope="singleton">
+		<property name="dataSource" ref="partitionDataSource" />
+	</bean>
+	<!-- Base DAO transaction properties -->
+	<bean name="baseDAO" lazy-init="true" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="JdbcTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="load*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="query*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="requireNew*">PROPAGATION_REQUIRES_NEW,-Throwable</prop>
+				<prop key="requireNever*">PROPAGATION_NEVER,-Throwable</prop>
+				<prop key="*">PROPAGATION_REQUIRED,-Throwable</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Base Service transaction properties -->
+	<bean name="baseService" lazy-init="true" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="JdbcTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="requireNew*">PROPAGATION_REQUIRES_NEW,-Throwable</prop>
+				<prop key="requireNever*">PROPAGATION_NEVER,-Throwable</prop>
+				<prop key="*">PROPAGATION_REQUIRED,-Throwable</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

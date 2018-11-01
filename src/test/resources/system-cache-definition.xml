@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Event key="className">
+	<CacheConfig className="com.huayin.common.dao.entity.AnteGame"
+		keyByProperties="gameId" refreshImpl=""
+		eternal="true" maxCacheSize="1000" timeToLiveSeconds="0"
+		timeToIdleSeconds="0" />
+	<CacheConfig className="com.huayin.common.monitor.Message"
+		keyByProperties="id" eternal="true" maxCacheSize="100000"
+		timeToLiveSeconds="0" timeToIdleSeconds="0" />
+</Event>

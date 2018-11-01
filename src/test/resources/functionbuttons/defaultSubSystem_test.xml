@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeConfigFile key="id">
+	<ModuleConfig id="99200">
+		<NodeObject sortNo="1" id="99201" showText="用户管理"
+			description="菜单-用户管理">
+			<NodeObject sortNo="1" id="99202"
+				destination="/um*,/encash/awardsBonus,/encash/saveBonusInfo,/encash/bonusInfo/*,/encash/manualDsipatche/*,encash/checkUser/*,/encash/dispatche"
+				showText="用户管理" description="菜单-用户管理" />
+		</NodeObject>
+	</ModuleConfig>
+</NodeConfigFile>

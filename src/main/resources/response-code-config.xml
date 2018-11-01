@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResponseDescribe key="code">
+	<!-- 通用响应码 -->
+	<ServiceResult code="0000" message="成功，系统处理正常。" />
+	<ServiceResult code="9998" message="系统维护中。" />
+	<ServiceResult code="9999" message="系统未知异常。" />
+</ResponseDescribe>

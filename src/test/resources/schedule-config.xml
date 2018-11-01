@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	XML元素说明
+	Task元素
+	属性
+
+	key:			指定任务调度唯一标识的属性名称, 例如key="name", 查找任务调度时将通过给定的name值查找配置.
+
+	ScheduleConfig元素
+	属性
+
+	name:			任务调度名称, 不能为空.
+	classImpl:		业务逻辑类名称, 不能为空.
+	descript:		任务调度描述, 不能为空.
+	scheduleParam:	自定义参数, 可以为空.
+
+	TimeIterator元素
+	属性
+
+	repeatMode: 	迭代方式, 已实现按周(7)、按天(5)、按月(2)、按分钟(12)、按千分之秒(14)五种迭代方式, 默认值(7), -1不执行.
+	interval:		循环调度的间隔, 按天、按分钟、按千分之妙迭代时才用到, 默认值(1000).
+	weekdays: 		每周需要调度的天数集合, 按周迭代时才用到, 整数(1-7), 逗号分隔, 默认值(1,2,3,4,5,6,7).
+	daytimes:		每天调度的时间点集合, 按周、按天迭代时才用到, 时间格式(00-23:00-59:00-59), 必须补齐零, 默认值(00:00:00).
+
+	示例:
+	<ScheduleConfig name="SportExportBackup"
+	classImpl="com.huayin.anteagent.scheduling.SportExportBackup"
+	scheduleParam="7"
+	descript="备份并压缩打票文件到系统参数(ANTE_SPORT_EXPORT_BACK_DIR)指定的目录">
+	<TimeIterator repeatMode="7">						'表示按周迭代, 每逢周一、五的上午9点、下午16:30执行一次.
+	<weekdays>1</weekdays>
+	<weekdays>5</weekdays>
+	<daytimes>09:00:00</daytimes>
+	<daytimes>16:30:00</daytimes>
+	</TimeIterator>
+    <TimeIterator repeatMode="2">
+		    <monthdays>25</monthdays>
+		    <daytimes>11:27:00</daytimes>
+			<daytimes>11:28:00</daytimes>
+			<daytimes>11:29:00</daytimes>
+			<daytimes>11:30:00</daytimes>
+	</TimeIterator>	                                    '表示按每月的25号，11点27分，28分，29分,30分执行一次
+	<TimeIterator repeatMode="12" interval="5" />		'表示按分钟迭代, 每隔5分钟执行一次.
+	<TimeIterator repeatMode="-1" />					'表示该迭代方式暂停.
+	</ScheduleConfig>	
+-->
+<Task key="name">
+<!--	<ScheduleConfig name="TestGameScheduling"
+		classImpl="com.huayin.agentportal.scheduling.TestGameScheduling"
+		descript="测试Bean容器">
+		<TimeIterator repeatMode="14" interval="15000"></TimeIterator>
+	</ScheduleConfig>-->
+	<ScheduleConfig name="AbstractJobTest"
+		classImpl="com.huayin.common.scheduling.AbstractJobTest"
+		descript="测试Bean容器">
+		<TimeIterator repeatMode="2">
+		    <monthdays>25</monthdays>
+		    <daytimes>11:27:00</daytimes>
+			<daytimes>11:28:00</daytimes>
+			<daytimes>11:29:00</daytimes>
+			<daytimes>11:30:00</daytimes>
+		</TimeIterator>		
+	</ScheduleConfig>
+</Task>

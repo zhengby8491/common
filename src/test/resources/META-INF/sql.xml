@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<NamedQuery name="OperateLog.testSQL" sql="select 1" />
+	<NamedQuery name="TestLog.testSQL" sql="select count(1) from TestLog" />
+	<NamedQuery name="TestLog.listSQL" sql="select * from TestLog" />
+</Config>

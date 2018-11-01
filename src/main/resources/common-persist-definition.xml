@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+	
+	<context:component-scan base-package="com.huayin.common" />
+	<bean id="MasterEntityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="partitionDataSource" />
+		<property name="packagesToScan" value="com.huayin" />
+		<property name="mappingResources">
+			<list>
+				<value>META-INF/orm.xml</value>
+			</list>
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="false" />
+				<property name="generateDdl" value="false" />
+			</bean>
+		</property>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+		</property>
+		<property name="jpaPropertyMap">
+		<props>
+				<!--设置外连接抓取树的最大深度 -->
+                <prop key="hibernate.max_fetch_depth">5</prop>
+                <prop key="hibernate.jdbc.fetch_size">100</prop>
+                <prop key="hibernate.jdbc.batch_size">50</prop>
+                <!-- 自动建表类型 validate|create|create-drop|update -->
+                <!-- <prop key="hibernate.hbm2ddl.auto">validate</prop> -->
+                <!-- 是否显示SQL -->
+                <prop key="hibernate.show_sql">false</prop>
+                <!-- 显示SQL是否格式化 -->
+                <prop key="hibernate.format_sql">false</prop>
+               		
+               	<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">/ehcache/ehcache-custom.xml</prop>
+				<prop key="hibernate.cache.use_structured_entries">true</prop>
+				<!-- <prop key="hibernate.ejb.event.post-insert">com.huayin.common.persist.OperateLogListener</prop>
+				<prop key="hibernate.ejb.event.post-update">com.huayin.common.persist.OperateLogListener</prop>
+				<prop key="hibernate.ejb.event.post-delete">com.huayin.common.persist.OperateLogListener</prop> -->
+			</props>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+	<!-- Main Database EMF, CAUTION: move to refrence project definition -->
+	<bean name="sharedEntityManagerBean"
+		class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+		<property name="entityManagerFactory" ref="MasterEntityManagerFactory" />
+	</bean>
+	<!-- JPA transaction manager -->
+	<tx:annotation-driven transaction-manager="MasterTransactionManager" proxy-target-class="true"/>
+	<bean id="MasterTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+		lazy-init="true">
+		<property name="entityManagerFactory" ref="MasterEntityManagerFactory" />
+		<property name="rollbackOnCommitFailure" value="true" />
+		<property name="failEarlyOnGlobalRollbackOnly" value="true" />
+		<property name="validateExistingTransaction" value="true" />
+		<property name="nestedTransactionAllowed" value="true" />
+	</bean>
+
+	<bean id="masterJdbcTemplate" lazy-init="true"
+		class="org.springframework.jdbc.core.JdbcTemplate" scope="singleton">
+		<property name="dataSource" ref="partitionDataSource" />
+	</bean>
+	<!-- Base DAO transaction properties -->
+	<bean name="baseDAO" lazy-init="true" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="MasterTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="load*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="query*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="requireNew*">PROPAGATION_REQUIRES_NEW,-Throwable</prop>
+				<prop key="requireNever*">PROPAGATION_NEVER,-Throwable</prop>
+				<prop key="*">PROPAGATION_REQUIRED,-Throwable</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Base Service transaction properties -->
+	<bean name="baseService" lazy-init="true" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="MasterTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="requireNew*">PROPAGATION_REQUIRES_NEW,-Throwable</prop>
+				<prop key="requireNever*">PROPAGATION_NEVER,-Throwable</prop>
+				<prop key="*">PROPAGATION_REQUIRED,-Throwable</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

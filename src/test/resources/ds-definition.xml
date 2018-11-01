@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<!-- 主数据库垂直/水平分区路由数据源配置，自动路由主从数据库，实现数据库垂直分区, 面向应用 -->
+	<bean id="partitionDataSource" class="com.huayin.common.persist.PartitionRoutingDataSource"
+		lazy-init="true">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="PRODUCT" value-ref="masterDataSource" />
+				<entry key="SLAVE" value-ref="slaveDataSource" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="masterDataSource" />
+	</bean>
+	<!-- 从数据库负载均衡和故障自动转移路由数据源配置, 面向应用 -->
+	<bean id="slaveDataSource" class="com.huayin.common.persist.BalanceDataSource"
+		lazy-init="true">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="slave1" value-ref="slave1DataSource" />
+				<entry key="slave2" value-ref="slave2DataSource" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="slave1DataSource" />
+	</bean>
+	
+	<!-- 以下是主从数据库配置, 面向数据源 -->
+	<!-- 主数据库定义，主数据库是用来处理业务的，即插入更新的库 -->
+	<bean id="masterDataSource" parent="oracle" lazy-init="true" />
+	<!-- 从数据库定义，从数据库是用来分担主数据库查询方面压力的，可以配置多个从数据库进行容灾处理 -->
+	<bean id="slave1DataSource" parent="oracle" lazy-init="true" />
+	<bean id="slave2DataSource" parent="oracle" lazy-init="true" />
+	
+	<!-- 以下是各数据库简单的示例 -->
+	<!-- 简单的Oracle JDBC数据库连接数据源，具体到某种数据库类型定义 -->
+	<bean id="oracle" parent="commondbcp" lazy-init="true">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@192.168.0.182:1521:orcl" />
+		<property name="username" value="msas2014" />
+		<property name="password" value="hpsystem" />
+		<property name="validationQuery" value="select 1 from dual" />
+	</bean>
+	<!-- 简单的SQL Server JDBC数据库连接数据源，具体到某种数据库类型定义 -->
+	<bean id="sqlserver" parent="commondbcp" lazy-init="true">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://192.168.0.175:1433;databaseName=Framework;selectMethod=cursor" />
+		<property name="username" value="framework" />
+		<property name="password" value="hpsystem" />
+		<property name="validationQuery" value="select 1" />
+	</bean>
+	<!-- 简单的HsqlDB JDBC数据库连接数据源，具体到某种数据库类型定义 -->
+	<bean id="hsqldb" parent="commondbcp" lazy-init="true">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:db/framework;shutdown=true" />
+		<property name="validationQuery" value="SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS" />
+	</bean>
+	<!-- 简单的MySQL JDBC数据库连接数据源，具体到某种数据库类型定义 -->
+	<bean id="mysql" parent="commondbcp" lazy-init="true">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://192.168.11.200:3306/framework?characterEncoding=utf-8" />
+		<property name="username" value="framework" />
+		<property name="password" value="hpsystem" />
+		<property name="validationQuery" value="select 1" />
+	</bean>
+	<!-- 通用的数据连接池配置 -->
+	<bean id="commondbcp" class="org.apache.commons.dbcp.BasicDataSource"
+		lazy-init="true" destroy-method="close">
+		<property name="maxActive" value="1000" />
+		<property name="initialSize" value="5" />
+		<property name="maxWait" value="5000" />
+		<property name="minIdle" value="1" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testWhileIdle" value="true" />
+	</bean>
+</beans>

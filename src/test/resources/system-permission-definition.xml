@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodeConfigFile key="name">
+	<SubSystemConfig sortNo="0" name="defaultSubSystem"
+		showText="运营支撑系统" defaultSystem="true" defaultAllowPrivilege="false">
+		<NodeObject sortNo="1" id="99100" destination="/welcome*"
+			showText="欢迎页" description="菜单-欢迎页" />
+		<NodeObject sortNo="2" id="99200" showText="用户管理"
+			description="菜单-模块-资金管理" importFile="functionbuttons/defaultSubSystem_test.xml">
+		</NodeObject>
+		<NodeObject sortNo="3" id="99300" destination="/entrychangePwd"
+			showText="修改密码" description="修改您的登录密码">
+		</NodeObject>
+		<NodeObject sortNo="4" id="99400" destination="/logout"
+			showText="退出系统" description="退出代理商接入管理系统">
+		</NodeObject>
+		<excludeActions>/index.jsp</excludeActions>
+		<excludeActions>/session*</excludeActions>
+		<excludeActions>/clientservice*</excludeActions>
+	</SubSystemConfig>
+</NodeConfigFile>

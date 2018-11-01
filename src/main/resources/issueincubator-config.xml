@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gameId:玩法编号 -->
+<!-- countPattern:奖期名周期计数部分规则 -->
+<!-- datePattern:奖期名日期部分规则 -->
+<!-- firstIssueOverDay:第一期是否跨天 -->
+<!-- countCycle:计数周期, year表示年, day表示天 -->
+<!-- holidayBeginTime:休市开始时间, 格式yyyy-MM-dd HH:mm:ss -->
+<!-- holidayEndTime:休市结束时间, 格式yyyy-MM-dd HH:mm:ss -->
+<!-- interval:玩法奖期之间间隔 -->
+<!-- lastCount:最后一次正常的奖期计数 -->
+<!-- lastEndTime:最后一次正常的奖期截止时间 -->
+<!-- IteratorConfig:奖期截止时间配置, 配置方式与定时任务配置一致 -->
+<Task key="gameId">
+	<GameConfig gameId="33" descript="重庆时时彩奖期截至时间配置"
+		countPattern="000" datePattern="yyyyMMdd" interval="0"
+		firstIssueOverDay="false" countCycle="day">
+		<IteratorConfig repeatMode="12" interval="5">
+			<daytimes>00:00:00</daytimes>
+			<daytimes>01:55:00</daytimes>
+		</IteratorConfig>
+		<IteratorConfig repeatMode="12" interval="485">
+			<daytimes>01:55:00</daytimes>
+			<daytimes>10:00:00</daytimes>
+		</IteratorConfig>
+		<IteratorConfig repeatMode="12" interval="10">
+			<daytimes>10:00:00</daytimes>
+			<daytimes>22:00:00</daytimes>
+		</IteratorConfig>
+		<IteratorConfig repeatMode="12" interval="5">
+			<daytimes>22:00:00</daytimes>
+			<daytimes>24:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="34" descript="江西时时彩奖期截至时间配置"
+		countPattern="000" datePattern="MMdd" interval="0" firstIssueOverDay="false"
+		countCycle="day">
+		<IteratorConfig repeatMode="12" interval="10">
+			<daytimes>09:10:00</daytimes>
+			<daytimes>23:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="55" descript="上海时时乐奖期截至时间配置"
+		countPattern="00" datePattern="yyyyMMdd" interval="0"
+		firstIssueOverDay="false" countCycle="day">
+		<IteratorConfig repeatMode="12" interval="30">
+			<daytimes>10:30:00</daytimes>
+			<daytimes>21:30:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="62" descript="体彩11选5奖期截至时间配置"
+		countPattern="00" datePattern="yyMMdd" interval="0"
+		firstIssueOverDay="true" countCycle="day">
+		<IteratorConfig repeatMode="12" interval="10">
+			<daytimes>09:05:00</daytimes>
+			<daytimes>21:55:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="73" descript="体彩快乐123奖期截至时间配置"
+		countPattern="000000" datePattern="yy" interval="0" firstIssueOverDay="true"
+		countCycle="year" lastEndTime="2010-04-08 09:54:00" lastCount="6476">
+		<IteratorConfig repeatMode="12" interval="10">
+			<daytimes>09:54:00</daytimes>
+			<daytimes>21:44:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="11" descript="双色球奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="5400" countCycle="year">
+		<IteratorConfig repeatMode="7">
+			<weekdays>2</weekdays>
+			<weekdays>4</weekdays>
+			<weekdays>7</weekdays>
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="68" descript="大乐透奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="600" countCycle="year">
+		<IteratorConfig repeatMode="7">
+			<weekdays>1</weekdays>
+			<weekdays>3</weekdays>
+			<weekdays>6</weekdays>
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="65" descript="七星彩奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="600" countCycle="year">
+		<IteratorConfig repeatMode="7">
+			<weekdays>2</weekdays>
+			<weekdays>5</weekdays>
+			<weekdays>7</weekdays>
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="63" descript="排列三奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="600" countCycle="year">
+		<IteratorConfig repeatMode="5" interval="1">
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="64" descript="排列五奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="600" countCycle="year">
+		<IteratorConfig repeatMode="5" interval="1">
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="51" descript="3D奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="5400" countCycle="year">
+		<IteratorConfig repeatMode="5" interval="1">
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+	<GameConfig gameId="24" descript="七乐彩奖期截至时间配置" countPattern="000"
+		datePattern="yyyy" holdTime="0" interval="5400" countCycle="year">
+		<IteratorConfig repeatMode="7">
+			<weekdays>1</weekdays>
+			<weekdays>3</weekdays>
+			<weekdays>5</weekdays>
+			<daytimes>20:00:00</daytimes>
+		</IteratorConfig>
+	</GameConfig>
+</Task>
